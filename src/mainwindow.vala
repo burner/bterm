@@ -1,8 +1,9 @@
-/*
- * Vala-Terminal -- a lightweight terminal program
+/* bterm a wmii like terminal emulator
+ * forked from vala-terminal
  *
  * (C) 2007-2010 Michael 'Mickey' Lauer <mickey@vanille-media.de>
  * (C) 2009 Aapo Rantalainen
+ * (C) 2010 Robert "BuRnEr" Schadek
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +24,7 @@ using GLib;
 using Gtk;
 using Gdk;
 
-public class ValaTerminal2.MainWindow : Gtk.Window {
+public class BTerm.MainWindow : Gtk.Window {
 	private static string initial_command;
 	private static string[] initial_command_line;
 	private HBox mainBox;
@@ -35,7 +36,7 @@ public class ValaTerminal2.MainWindow : Gtk.Window {
 		this.mainBox = new HBox(true, 1);
 		this.list = new VBox[1];
 		this.list[0] = new VBox(true, 1);
-		var tmp = new ValaTerminal2.MokoTerminal();
+		var tmp = new BTerm.BTerminal();
 		//this.list[0].add(tmp);
 		//this.mainBox.add(tmp);
 		
@@ -67,7 +68,7 @@ public class ValaTerminal2.MainWindow : Gtk.Window {
 	  /*FIX. GTK.init_with_args doesn't work. http://bugzilla.gnome.org/show_bug.cgi?id=547135 */
 		Gtk.init( ref args );
 
-		var window = new ValaTerminal2.MainWindow();
+		var window = new BTerm.MainWindow();
 		if(initial_command != null) {
 			window.setup_command( initial_command );
 		} else if(initial_command_line != null) {

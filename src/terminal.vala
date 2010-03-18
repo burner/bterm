@@ -1,8 +1,9 @@
-/*
- * Vala-Terminal -- a lightweight terminal program
+/* bterm a wmii like terminal emulator
+ * forked from vala-terminal
  *
  * (C) 2007-2010 Michael 'Mickey' Lauer <mickey@vanille-media.de>
  * (C) 2009 Aapo Rantalainen
+ * (C) 2010	Robert "BuRnEr" Schadek
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +25,7 @@ using Gdk;
 using Gtk;
 using Vte;
 
-public class ValaTerminal2.MokoTerminal : HBox {
+public class BTerm.BTerminal : HBox {
 	private Terminal terminal;
 	public signal void selection(bool active);
 	private static const string mod0_key = "Alt_L";
@@ -68,7 +69,7 @@ public class ValaTerminal2.MokoTerminal : HBox {
 		switch(Gdk.keyval_name(button.keyval)) {
 			case mod0_key:
 				this.mod0 = true;
-				ValaTerminal2.MainWindow.add_term(0);
+				BTerm.MainWindow.add_term(0);
 				break;
 		}
 		return false;
@@ -78,7 +79,7 @@ public class ValaTerminal2.MokoTerminal : HBox {
 		switch(Gdk.keyval_name(button.keyval)) {
 			case mod0_key:
 				this.mod0 = false;
-				ValaTerminal2.MainWindow.add_term(0);
+				BTerm.MainWindow.add_term(0);
 				break;
 		}
 		return false;
