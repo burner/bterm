@@ -1,0 +1,81 @@
+/*
+ * Vala-Terminal -- a lightweight terminal program
+ *
+ * (C) 2007-2010 Michael 'Mickey' Lauer <mickey@vanille-media.de>
+ * (C) 2009 Aapo Rantalainen
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
+ */
+
+using GLib;
+using Gtk;
+using Gdk;
+
+public class ValaTerminal2.MainWindow : Gtk.Window {
+	private static string initial_command;
+	private static string[] initial_command_line;
+	private HBox mainBox;
+	private VBox[] list;
+	uint count;
+
+	public MainWindow() {
+		count = 1;
+		this.mainBox = new HBox(true, 1);
+		this.list = new VBox[1];
+		this.list[0] = new VBox(true, 1);
+		var tmp = new ValaTerminal2.MokoTerminal();
+		//this.list[0].add(tmp);
+		//this.mainBox.add(tmp);
+		
+		destroy.connect(Gtk.main_quit);
+		//key_press_event.connect(key_press_event_cb);
+		//term.destroy.connect(Gtk.main_quit);
+		add(tmp);
+		//set_focus_child(tmp);
+		
+		//this.set_focus_child(this.list[0].get_children());
+		set_default_size(640, 480);
+	}
+
+	public void setup_command( string command ) {
+		initial_command = command + "\n";
+	}
+
+	public static void add_term(uint id) {
+		stdout.printf("called by term with id %u\n", id);
+	}
+
+	public void run() {
+		// FIXME default focus needs to be on the terminal (in order to play nice with on-screen keyboards)
+		show_all();
+		Gtk.main();
+	}
+
+	static int main (string[] args) {
+	  /*FIX. GTK.init_with_args doesn't work. http://bugzilla.gnome.org/show_bug.cgi?id=547135 */
+		Gtk.init( ref args );
+
+		var window = new ValaTerminal2.MainWindow();
+		if(initial_command != null) {
+			window.setup_command( initial_command );
+		} else if(initial_command_line != null) {
+			initial_command = string.joinv( " ", initial_command_line );
+			window.setup_command( initial_command );
+		}
+
+		window.run();
+		return 0;
+	}
+}
