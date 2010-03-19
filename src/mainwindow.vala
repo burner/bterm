@@ -47,7 +47,7 @@ public class BTerm.MainWindow : Gtk.Window {
 		//set_focus_child(tmp);
 		
 		//this.set_focus_child(this.list[0].get_children());
-		set_default_size(640, 480);
+		set_default_size(640, 400);
 	}
 
 	public void setup_command( string command ) {

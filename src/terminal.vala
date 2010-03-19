@@ -25,7 +25,7 @@ using Gdk;
 using Gtk;
 using Vte;
 
-public class BTerm.BTerminal : HBox {
+public class BTerm.BTerminal : VBox {
 	private Terminal terminal;
 	public signal void selection(bool active);
 	private static const string mod0_key = "Alt_L";
