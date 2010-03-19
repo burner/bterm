@@ -66,18 +66,33 @@ public class BTerm.List {
 		if(n == null && p == null) { //delete
 
 		} else if(n == null && p != null) { //set tail
-
+			p.set_next(null);
+			this.tail = p;
 		} else if(n != null && p == null) { //set root
-
+			n.set_prev(null);
+			this.root = null;
 		} else { //normal
-
+			n.set_prev(p);
+			p.set_next(n);
 		}
+		tmp.set_prev(null);
+		tmp.set_next(null);
 		return tmp;	
 	}
 
 	public void append(BTerm.Item ti) {
+		this.tail.set_next(ti);
+		ti.set_prev(this.tail);
+		this.tail = ti;
+	}
+	
+	public void move_down(uint id) {
 
-	}	
+	}
+	
+	public void move_up(uint id) {
+
+	}
 
 	public void print() {
 		var tmp = this.root;
@@ -124,6 +139,32 @@ public class BTerm.LList {
 			tmp = tmp.get_next();
 		}
 	}
+
+	public static void move_left(uint id) {
+
+	}
+	
+	public static void move_right(uint id) {
+
+	}
+	
+	public static void move_up(uint id) {
+
+	}
+	
+	public static void move_down(uint id) {
+
+	}
+
+	public void has(uint id) {
+		var tmp = this.root;
+		while(tmp != null) {
+			if(tmp.has(id)) {
+				stdout.printf("%u found in List %u\n",id, tmp.id);
+			}
+			tmp = tmp.get_next();
+		}
+	}
 }
 
 public static int main(string[] args) {
@@ -132,5 +173,6 @@ public static int main(string[] args) {
 		t.create_item();
 	}
 	t.print();
+	t.has(23);
 	return 0;
 }
