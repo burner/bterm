@@ -14,9 +14,9 @@ public class BTerm.Item {
 	}
 
 	public void set_next(BTerm.Item? nn) { this.next = nn; }
-	public BTerm.Item get_next() { return this.next; }
+	public BTerm.Item? get_next() { return this.next; }
 	public void set_prev(BTerm.Item? nn) { this.prev = nn; }
-	public BTerm.Item get_prev() { return this.prev; }
+	public BTerm.Item? get_prev() { return this.prev; }
 	public void set_parent(BTerm.List np) { this.parent = np; }
 }
 
@@ -40,8 +40,8 @@ public class BTerm.List {
 		this.local_count = 1;
 		tmp.set_next(null);
 		tmp.set_prev(null);
-		root = tmp;
-		tail = tmp;
+		this.root = tmp;
+		this.tail = tmp;
 	}
 	
 	public List.with_Item(uint id_in, BTerm.LList par, BTerm.Item tcrtwth) {
@@ -50,12 +50,12 @@ public class BTerm.List {
 		this.local_count = 1;
 		tcrtwth.set_next(null);
 		tcrtwth.set_prev(null);
-		root = tcrtwth;
-		tail = tcrtwth;
+		this.root = tcrtwth;
+		this.tail = tcrtwth;
 	}
 	
 	public void create_item() {
-		int r = GLib.Random.int_range(0,5);
+		int r = GLib.Random.int_range(0,2);
 		for(int i = 0; i < r; i++) {
 			var tmp = new BTerm.Item(List.count++, this);
 			this.append(tmp);
@@ -102,6 +102,7 @@ public class BTerm.List {
 	public void append(BTerm.Item ti) {
 		this.tail.set_next(ti);
 		ti.set_prev(this.tail);
+		ti.set_next(null);
 		this.tail = ti;
 		this.local_count++;
 	}
@@ -123,7 +124,7 @@ public class BTerm.List {
 		var ln = tmp.get_next().get_next();
 		var lp = tmp.get_prev();
 		var tmp2 = tmp.get_next();
-		
+
 		if(lp != null) {
 			lp.set_next(tmp2);
 			tmp2.set_prev(lp);
@@ -140,8 +141,8 @@ public class BTerm.List {
 			ln.set_prev(tmp);
 		} else {
 			tmp.set_next(null);
-			this.tail == tmp;
-		}	
+			this.tail = tmp;
+		}
 	}
 	
 	public void move_up(uint id) {
@@ -293,7 +294,7 @@ public class BTerm.LList {
 		var l = tmp.get_next();
 		var tobj = tmp.remove(id);
 	 	if(l != null) l.append(tobj);
-		else this.create_item_with_prev(tobj);
+		else this.create_item_with_next(tobj);
 	}
 	
 	public void move_right(uint id) {
@@ -301,7 +302,7 @@ public class BTerm.LList {
 		var p = tmp.get_prev();
 		var tobj = tmp.remove(id);
 	 	if(p != null) p.append(tobj);
-		else this.create_item_with_next(tobj);
+		else this.create_item_with_prev(tobj);
 	}
 	
 	public void move_up(uint id) {
@@ -310,7 +311,8 @@ public class BTerm.LList {
 	}
 	
 	public void move_down(uint id) {
-
+		var tmp = this.find_in_list(id);
+		tmp.move_down(id);
 	}
 
 	public void has(uint id) {
@@ -326,30 +328,31 @@ public class BTerm.LList {
 
 public static int main(string[] args) {
 	var t = new BTerm.LList();
-	for(int i = 0; i <10; i++) {
+	for(int i = 0; i <3; i++) {
 		t.create_item();
 	}
 	int mu = Random.int_range(0,(int)BTerm.List.get_count());
 	t.print();
 	stdout.printf("\n");
-	for(int i = 0; i < 5; i++) {
+	for(int i = 0; i < 15; i++) {
 		mu = Random.int_range(0,(int)BTerm.List.get_count());
 		int s = Random.int_range(1,5);
+		stdout.printf("\n");
 		switch(s) {
 			case 1:
-				stdout.printf("move up %d ", mu);
+				stdout.printf("move up %d\n", mu);
 				t.move_up(mu);
 				break;
 			case 2:
-				stdout.printf("move down %d ", mu);
+				stdout.printf("move down %d\n", mu);
 				t.move_down(mu);
 				break;
 			case 3:
-				stdout.printf("move left %d ", mu);
+				stdout.printf("move left %d\n", mu);
 				t.move_left(mu);
 				break;
 			case 4:
-				stdout.printf("move right %d ", mu);
+				stdout.printf("move right %d\n", mu);
 				t.move_right(mu);
 				break;
 			default:
@@ -357,6 +360,7 @@ public static int main(string[] args) {
 				break;
 		}
 		stdout.printf("\n");
+		t.print();
 	}
 	stdout.printf("\n");
 /*	for(int i = 0; i < 25; i++) {
