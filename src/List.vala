@@ -23,8 +23,10 @@ public class BTerm.Item {
 	public BTerm.Item? get_prev() { return this.prev; }
 	public void set_parent(BTerm.List np) { this.parent = np; }
 
-	private void move_up() { this.parent.move_up(this.id); }
-	private void move_down() { this.parent.move_down(this.id); }
+	public void move_up() { this.parent.move_up(this.id); }
+	public void move_down() { this.parent.move_down(this.id); }
+	public void move_left() { this.parent.move_left(this.id); }
+	public void move_right() { this.parent.move_right(this.id); }
 }
 
 public class BTerm.List {
@@ -182,6 +184,14 @@ public class BTerm.List {
 			tmp2.set_next(null);
 			this.tail = tmp2;
 		}
+	}
+
+	public void move_left(uint id) {
+		this.parent.move_left(id);
+	}
+	
+	public void move_right(uint id) {
+		this.parent.move_right(id);
 	}
 
 	public void print() {

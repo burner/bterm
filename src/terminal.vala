@@ -44,11 +44,11 @@ public class BTerm.BTerminal : VBox {
 		terminal.window_title_changed += term => { Gtk.Window toplevel = (Gtk.Window) get_toplevel(); toplevel.set_title( term.window_title ); };
 		pack_start( terminal, true, true, 0 );
 
-		terminal.set_scrollback_lines( 1000 );
+		terminal.set_scrollback_lines( BTerm.Config.scrollback_lines );
 		terminal.set_mouse_autohide( true );
 		terminal.set_backspace_binding( TerminalEraseBinding.ASCII_DELETE);
 		// work around bug in VTE. FIXME: Clear with upstream
-		terminal.set_size(80, 24);
+		terminal.set_size(BTerm.Config.terminal_size_width, BTerm.Config.terminal_size_heigth);
 		stdout.printf("col count = %ld\n", terminal.row_count);
 		terminal.fork_command( (string) 0, (string[]) 0, new string[]{}, Environment.get_variable( "HOME" ), true, true, true );
 		terminal.key_press_event.connect(key_press_event_cb);		
@@ -90,4 +90,19 @@ public class BTerm.BTerminal : VBox {
 		return false;
 	}
 
+	private void move_up() {
+		this.item.move_up();
+	}
+	
+	private void move_down() {
+		this.item.move_down();
+	}	
+
+	private void move_left() {
+		this.item.move_left();
+	}
+	
+	private void move_right() {
+		this.item.move_right();
+	}
 }

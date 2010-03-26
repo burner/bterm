@@ -27,8 +27,6 @@ using Gdk;
 public class BTerm.MainWindow : Gtk.Window {
 	private static string initial_command;
 	private static string[] initial_command_line;
-	private HBox mainBox;
-	private VBox[] list;
 	uint count;
 	private BTerm.LList root;
 
@@ -47,7 +45,7 @@ public class BTerm.MainWindow : Gtk.Window {
 		//set_focus_child(tmp);
 		
 		//this.set_focus_child(this.list[0].get_children());
-		set_default_size(640, 400);
+		set_default_size(BTerm.Config.default_width, BTerm.Config.default_heigth);
 	}
 
 	public void setup_command( string command ) {
