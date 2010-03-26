@@ -32,7 +32,7 @@ public class BTerm.BTerminal : VBox {
 	private bool mod0;
 	private BTerm.Item item;
 	
-	public BTerm.BTerminal(BTerm.Item item) {
+	public BTerminal(BTerm.Item item) {
 		this.item = item;
 	}
 

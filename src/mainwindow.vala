@@ -30,20 +30,20 @@ public class BTerm.MainWindow : Gtk.Window {
 	private HBox mainBox;
 	private VBox[] list;
 	uint count;
+	private BTerm.LList root;
 
 	public MainWindow() {
+		this.root = new BTerm.LList();
+		this.root.create_item();
+		var layout = this.root.get_layout();
 		count = 1;
-		this.mainBox = new HBox(true, 1);
-		this.list = new VBox[1];
-		this.list[0] = new VBox(true, 1);
-		var tmp = new BTerm.BTerminal();
 		//this.list[0].add(tmp);
 		//this.mainBox.add(tmp);
 		
 		destroy.connect(Gtk.main_quit);
 		//key_press_event.connect(key_press_event_cb);
 		//term.destroy.connect(Gtk.main_quit);
-		add(tmp);
+		add(layout);
 		//set_focus_child(tmp);
 		
 		//this.set_focus_child(this.list[0].get_children());

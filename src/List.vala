@@ -1,14 +1,16 @@
 using GLib;
+using Gtk;
+using Gdk;
 
 public class BTerm.Item {
-	private BTerm.BTermial term;
+	public BTerm.BTerminal term;
 	public uint id;
 	private BTerm.Item next;
 	private BTerm.Item prev;
 	private BTerm.List parent;
 
 	public Item(uint id_in, BTerm.List par) {
-		this.term = new BTerm.BTermial(this);
+		this.term = new BTerm.BTerminal(this);
 		this.parent = par;
 		this.id = id_in;
 		this.next = null;
@@ -192,6 +194,16 @@ public class BTerm.List {
 		stdout.printf("\t\troot %u; tail %u \n", this.root.id, this.tail.id);
 	}
 
+	public VBox get_layout() {
+		VBox return_box = new VBox(false, 0);
+		var tmp = this.root;
+		while(tmp != null) {
+			return_box.pack_start(tmp.term, false, false, 0);
+			tmp = tmp.get_next();
+		}
+		return return_box;
+	}
+
 	public void set_next(BTerm.List? nn) { this.next = nn; }
 	public BTerm.List get_next() { return this.next; }
 	public void set_prev(BTerm.List? nn) { this.prev = nn; }
@@ -330,8 +342,18 @@ public class BTerm.LList {
 			tmp = tmp.get_next();
 		}
 	}
-}
 
+	public HBox get_layout() {
+		HBox main_box = new HBox(false, 0);
+		var tmp = this.root;
+		while(tmp != null) {
+			main_box.pack_start(tmp.get_layout(), false, false, 0);
+			tmp = tmp.get_next();
+		}	
+		return main_box;	
+	}
+}
+/*
 public static int main(string[] args) {
 	var t = new BTerm.LList();
 	for(int i = 0; i <3; i++) {
@@ -369,11 +391,11 @@ public static int main(string[] args) {
 		t.print();
 	}
 	stdout.printf("\n");
-/*	for(int i = 0; i < 25; i++) {
+	for(int i = 0; i < 25; i++) {
 		mu = Random.int_range(0,(int)BTerm.List.get_count());
 		stdout.printf("remove %d ", mu);
 		t.remove(mu);
-	}*/
+	}
 	t.print();
 	return 0;
-}
+}*/
