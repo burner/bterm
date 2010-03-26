@@ -1,12 +1,14 @@
 using GLib;
 
 public class BTerm.Item {
+	private BTerm.BTermial term;
 	public uint id;
 	private BTerm.Item next;
 	private BTerm.Item prev;
 	private BTerm.List parent;
 
 	public Item(uint id_in, BTerm.List par) {
+		this.term = new BTerm.BTermial(this);
 		this.parent = par;
 		this.id = id_in;
 		this.next = null;
@@ -18,6 +20,9 @@ public class BTerm.Item {
 	public void set_prev(BTerm.Item? nn) { this.prev = nn; }
 	public BTerm.Item? get_prev() { return this.prev; }
 	public void set_parent(BTerm.List np) { this.parent = np; }
+
+	private void move_up() { this.parent.move_up(this.id); }
+	private void move_down() { this.parent.move_down(this.id); }
 }
 
 public class BTerm.List {
@@ -50,8 +55,10 @@ public class BTerm.List {
 		this.local_count = 1;
 		tcrtwth.set_next(null);
 		tcrtwth.set_prev(null);
+		tcrtwth.set_parent(this);
 		this.root = tcrtwth;
 		this.tail = tcrtwth;
+		
 	}
 	
 	public void create_item() {
@@ -103,6 +110,7 @@ public class BTerm.List {
 		this.tail.set_next(ti);
 		ti.set_prev(this.tail);
 		ti.set_next(null);
+		ti.set_parent(this);
 		this.tail = ti;
 		this.local_count++;
 	}
@@ -217,7 +225,6 @@ public class BTerm.LList {
 
 	public void create_item_with_next(BTerm.Item tcrtwth) {
 		var tmp = new BTerm.List.with_Item(this.count++, this, tcrtwth);
-		tmp.create_item();
 		this.tail.set_next(tmp);
 		tmp.set_prev(this.tail);
 		tmp.set_next(null);
@@ -226,7 +233,6 @@ public class BTerm.LList {
 
 	public void create_item_with_prev(BTerm.Item tcrtwth) {
 		var tmp = new BTerm.List.with_Item(this.count++, this, tcrtwth);
-		tmp.create_item();
 		tmp.set_next(this.root);
 		tmp.set_prev(null);
 		this.root.set_prev(tmp);

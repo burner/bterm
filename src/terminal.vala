@@ -30,6 +30,11 @@ public class BTerm.BTerminal : VBox {
 	public signal void selection(bool active);
 	private static const string mod0_key = "Alt_L";
 	private bool mod0;
+	private BTerm.Item item;
+	
+	public BTerm.BTerminal(BTerm.Item item) {
+		this.item = item;
+	}
 
 	construct {
 		terminal = new Vte.Terminal();
