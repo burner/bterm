@@ -32,7 +32,7 @@ public class BTerm.MainWindow : Gtk.Window {
 
 	public MainWindow() {
 		this.root = new BTerm.LList();
-		this.root.create_item();
+		//this.root.create_item();
 		var layout = this.root.get_layout();
 		count = 1;
 		//this.list[0].add(tmp);
@@ -46,6 +46,7 @@ public class BTerm.MainWindow : Gtk.Window {
 		
 		//this.set_focus_child(this.list[0].get_children());
 		set_default_size(BTerm.Config.default_width, BTerm.Config.default_heigth);
+		//set_default_size(640, 400);
 	}
 
 	public void setup_command( string command ) {

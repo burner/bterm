@@ -23,16 +23,12 @@ public class BTerm.Item {
 	public BTerm.Item? get_prev() { return this.prev; }
 	public void set_parent(BTerm.List np) { this.parent = np; }
 
-	public void move_up() { this.parent.move_up(this.id); }
-	public void move_down() { this.parent.move_down(this.id); }
-	public void move_left() { this.parent.move_left(this.id); }
-	public void move_right() { this.parent.move_right(this.id); }
+	public void exec_command(int exec_id) { this.parent.exec_command(exec_id, this.id); }
 }
 
 public class BTerm.List {
 	private BTerm.Item root;
 	private BTerm.Item tail;
-
 	private BTerm.List next;
 	private BTerm.List prev;
 
@@ -41,6 +37,7 @@ public class BTerm.List {
 
 	public uint id;
 	private BTerm.LList parent;
+	private VBox list_box;
 
 	public List(uint id_in, BTerm.LList par) {
 		this.parent = par;
@@ -51,6 +48,8 @@ public class BTerm.List {
 		tmp.set_prev(null);
 		this.root = tmp;
 		this.tail = tmp;
+		this.list_box = new VBox(false, 0);
+		this.list_box.pack_start(this.root.term, false, false, 0);
 	}
 	
 	public List.with_Item(uint id_in, BTerm.LList par, BTerm.Item tcrtwth) {
@@ -62,18 +61,59 @@ public class BTerm.List {
 		tcrtwth.set_parent(this);
 		this.root = tcrtwth;
 		this.tail = tcrtwth;
-		
+		this.list_box = new VBox(false, 0);
+		this.list_box.pack_start(this.root.term, false, false, 0);
+	}
+	
+	public void exec_command(int exec_id, uint id) {
+		stdout.printf("exec command %d by %u\n", exec_id, id);
+		switch(exec_id) {
+			case BTerm.Exec.move_up:
+				this.move_up(id);
+				this.update_view();
+				break;
+			case BTerm.Exec.move_down:
+				this.move_down(id);
+				this.update_view();
+				break;
+			case BTerm.Exec.move_left:
+				this.parent.move_left(id);
+				this.update_view();
+				break;
+			case BTerm.Exec.move_right:
+				this.parent.move_right(id);
+				this.update_view();
+				break;
+			case BTerm.Exec.remove:
+				this.parent.remove(id);
+				this.update_view();
+				break;
+			case BTerm.Exec.add:
+				stdout.printf("create new\n");
+				this.create_item();
+				this.update_view();
+				break;
+		}
+	}
+
+	private void update_view() {
+		stdout.printf("removed start\n");
+		var list = this.list_box.get_children();
+		foreach(var i in list) {
+			this.list_box.remove(i);
+		}
+		var tmp = this.root;
+		while(tmp != null) {
+			this.list_box.add(tmp.term);
+			tmp = tmp.get_next();
+		}
+		stdout.printf("removed all\n");
+		this.list_box.show_all();
 	}
 	
 	public void create_item() {
-		int r = GLib.Random.int_range(0,2);
-		for(int i = 0; i < r; i++) {
-			var tmp = new BTerm.Item(List.count++, this);
-			this.append(tmp);
-			//this.tail.set_next(tmp);
-			//tmp.set_prev(this.tail);
-			//this.tail = tmp;
-		}
+		var tmp = new BTerm.Item(List.count++, this);
+		this.append(tmp);
 	}
 
 	public bool has(uint id) {
@@ -205,13 +245,14 @@ public class BTerm.List {
 	}
 
 	public VBox get_layout() {
-		VBox return_box = new VBox(false, 0);
+		/*VBox return_box = new VBox(false, 0);
 		var tmp = this.root;
 		while(tmp != null) {
 			return_box.pack_start(tmp.term, false, false, 0);
 			tmp = tmp.get_next();
 		}
-		return return_box;
+		return return_box;*/
+		return this.list_box;
 	}
 
 	public void set_next(BTerm.List? nn) { this.next = nn; }
@@ -230,7 +271,6 @@ public class BTerm.LList {
 
 	public LList() {
 		var tmp = new BTerm.List(this.count++, this);
-		tmp.create_item();
 		tmp.set_next(null);
 		tmp.set_prev(null);
 		root = tmp;
@@ -239,7 +279,6 @@ public class BTerm.LList {
 	
 	public void create_item() {
 		var tmp = new BTerm.List(this.count++, this);
-		tmp.create_item();
 		this.tail.set_next(tmp);
 		tmp.set_prev(this.tail);
 		this.tail = tmp;

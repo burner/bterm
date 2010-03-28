@@ -28,9 +28,29 @@ using Vte;
 public class BTerm.BTerminal : VBox {
 	private Terminal terminal;
 	public signal void selection(bool active);
-	private static const string mod0_key = "Alt_L";
-	private bool mod0;
 	private BTerm.Item item;
+
+	//key defines
+	private static const string alt_l_key = "Alt_L";
+	private static const string strg_l_key = "Control_L";
+	private static const string super_l_key = "Super_L";
+	private static const string shift_l_key = "Shift_L";
+	private static const string right_key = "Right";
+	private static const string left_key = "Left";
+	private static const string up_key = "Up";
+	private static const string down_key = "Down";
+	private static const string return_key = "Return";
+
+	//pressed keys
+	private bool alt_l;
+	private bool strg_l;
+	private bool shift_l;
+	private bool super_l;
+	private bool up;
+	private bool down;
+	private bool left;
+	private bool right;
+	private bool return_;
 	
 	public BTerminal(BTerm.Item item) {
 		this.item = item;
@@ -70,39 +90,92 @@ public class BTerm.BTerminal : VBox {
 		this.show_all();
 	}
 
+	private void exec_command() {
+		stdout.printf("alt %s; strg %s; shift %s; return %s\n", this.alt_l ? "true" : "false", this.strg_l ? "true" : "false", this.shift_l ? "true" : "false", this.return_ ? "true" : "false");
+		if(this.alt_l && this.shift_l && this.up) {
+			this.item.exec_command(BTerm.Exec.move_up);
+		} else if(this.alt_l && this.shift_l && this.down) {
+			this.item.exec_command(BTerm.Exec.move_down);
+		} else if(this.alt_l && this.shift_l && this.left) {
+			this.item.exec_command(BTerm.Exec.move_left);
+		} else if(this.alt_l && this.shift_l && this.right) {
+			this.item.exec_command(BTerm.Exec.move_right);
+		} else if(this.alt_l && this.return_) {
+			stdout.printf("add new\n");
+			this.item.exec_command(BTerm.Exec.add);
+		}
+	}
+
 	bool key_press_event_cb(Gdk.EventKey button) {
 		switch(Gdk.keyval_name(button.keyval)) {
-			case mod0_key:
-				this.mod0 = true;
-				BTerm.MainWindow.add_term(0);
+			case alt_l_key:
+				this.alt_l = !this.alt_l;
+				break;
+			case strg_l_key:
+				this.strg_l = !this.strg_l;
+				break;
+			case super_l_key:
+				this.super_l = !this.super_l;
+				break;
+			case shift_l_key:
+				this.shift_l = !this.shift_l;
+				break;
+			case up_key:
+				this.up = !this.up;
+				break;
+			case down_key:
+				this.down = !this.down;
+				break;
+			case left_key:
+				this.left = !this.left;
+				break;
+			case right_key:
+				this.right = !this.right;
+				break;
+			case return_key:
+				this.return_ = !this.return_;
+				break;
+			default:
 				break;
 		}
+		stdout.printf("key pressed %s\n", Gdk.keyval_name(button.keyval));
+		this.exec_command();
 		return false;
 	}
 	
 	bool key_release_event_cb(Gdk.EventKey button) {
 		switch(Gdk.keyval_name(button.keyval)) {
-			case mod0_key:
-				this.mod0 = false;
-				BTerm.MainWindow.add_term(0);
+			case alt_l_key:
+				this.alt_l = !this.alt_l;
+				break;
+			case strg_l_key:
+				this.strg_l = !this.strg_l;
+				break;
+			case super_l_key:
+				this.super_l = !this.super_l;
+				break;
+			case shift_l_key:
+				this.shift_l = !this.shift_l;
+				break;
+			case up_key:
+				this.up = !this.up;
+				break;
+			case down_key:
+				this.down = !this.down;
+				break;
+			case left_key:
+				this.left = !this.left;
+				break;
+			case right_key:
+				this.right = !this.right;
+				break;
+			case return_key:
+				this.return_ = !this.return_;
+				break;
+			default:
 				break;
 		}
+		stdout.printf("key released %s\n", Gdk.keyval_name(button.keyval));
 		return false;
-	}
-
-	private void move_up() {
-		this.item.move_up();
-	}
-	
-	private void move_down() {
-		this.item.move_down();
-	}	
-
-	private void move_left() {
-		this.item.move_left();
-	}
-	
-	private void move_right() {
-		this.item.move_right();
 	}
 }
